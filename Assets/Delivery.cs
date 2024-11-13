@@ -2,8 +2,17 @@ using UnityEngine;
 
 public class Delivery : MonoBehaviour
 {
-    bool hasPackage;
+    [SerializeField] Color32 hasPackageColor = new Color32 (1, 1, 1, 1);
+    [SerializeField] Color32 noPackageColor = new Color32 (255, 255, 255, 255);
+
     [SerializeField] float destructionDelay = 0.5f;
+    bool hasPackage;
+
+    SpriteRenderer spriteRenderer;
+
+    void Start() {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
 
     void OnCollisionEnter2D(Collision2D other)
     {
@@ -14,11 +23,13 @@ public class Delivery : MonoBehaviour
         if (other.tag == "Package" && !hasPackage) {
             Debug.Log("Package picked up.");
             hasPackage = true;
+            spriteRenderer.color = hasPackageColor;
             Destroy(other.gameObject, destructionDelay);
         }
         if (other.tag == "Customer" && hasPackage) {
             Debug.Log("Package delivered.");
             hasPackage = false;
+            spriteRenderer.color = noPackageColor;
         }
     }
 }
